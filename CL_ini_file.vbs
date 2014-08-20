@@ -1,9 +1,3 @@
-Dim ProgramSettings 
-Set ProgramSettings = New ini_file
-ProgramSettings.OpenIniFile("C:\Windows\Prefetch\Layout.ini")
-MsgBox ProgramSettings.GetSetting("PERF_.NET CLR Networking","First Counter")
-Set ProgramSettings = Nothing
-
 
 Const ForReading = 1
 Const ForWriting = 2
