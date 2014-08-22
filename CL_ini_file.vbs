@@ -42,7 +42,7 @@ Class ini_file
 
         Private Function ParseSections(objFile)
             Dim FileAsString
-            Dim CurrentSetting
+            Dim CurrentSection
         
             Do Until objFile.AtEndofStream
                 FileAsString = objFile.ReadLine()
@@ -53,7 +53,7 @@ Class ini_file
                     
                     If objSettingsDictionary.Exists(replace(replace(FileAsString,"[",""),"]","")) = 0 then
                         objSettingsDictionary.Add replace(replace(FileAsString,"[",""),"]",""),CreateObject("scripting.dictionary")
-                        CurrentSetting = replace(replace(FileAsString,"[",""),"]","")
+                        CurrentSection = replace(replace(FileAsString,"[",""),"]","")
                         Debug.WriteLine FileAsString
                     End if
                 Else
@@ -61,11 +61,11 @@ Class ini_file
                     Set colMatches = objRegex.execute(FileAsString)
                         
                     For Each match In colMatches
-                        If objSettingsDictionary.Exists(CurrentSetting) Then
-                            Set UGH = objSettingsDictionary.Item(CurrentSetting)
+                        If objSettingsDictionary.Exists(CurrentSection) Then
+                            Set settingsForSection = objSettingsDictionary.Item(CurrentSection)
                             
-                            If UGH.Exists(Replace(match.value,"=","")) = 0 Then
-                                UGH.Add Replace(match.value,"=",""),objRegex.replace(FileAsString,"")
+                            If settingsForSection.Exists(Replace(match.value,"=","")) = 0 Then
+                                settingsForSection.Add Replace(match.value,"=",""),objRegex.replace(FileAsString,"")
                             End If
                         End If
                     Next
