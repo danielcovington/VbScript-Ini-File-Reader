@@ -8,7 +8,6 @@ Const TristateFalse = 0
 Class ini_file
     Dim objSettingsDictionary
     Dim objFileSystemObject
-    Dim objIniTextDFile
     Dim objRegex
 
         Private Sub Class_Initialize() 
@@ -26,13 +25,8 @@ Class ini_file
 
         Public Function GetSetting(strSection,strKey)
             Set Section = objSettingsDictionary(strSection)
-            duh = Section.keys
-            MsgBox UBound(duh)
-            
-            For i = 0 To UBound(duh)
-                Debug.WriteLine duh(i)
-            Next
-             
+            keysForSection = Section.keys
+ 
             GetSetting = Section.Item(strKey)
         End Function
 
@@ -71,8 +65,6 @@ Class ini_file
                             Set UGH = objSettingsDictionary.Item(CurrentSetting)
                             
                             If UGH.Exists(Replace(match.value,"=","")) = 0 Then
-                                'Debug.WriteLine Replace(match.value,"=","")
-                                'Debug.WriteLine " " & objRegex.replace(FileAsString,"")
                                 UGH.Add Replace(match.value,"=",""),objRegex.replace(FileAsString,"")
                             End If
                         End If
