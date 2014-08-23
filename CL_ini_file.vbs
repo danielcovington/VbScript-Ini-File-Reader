@@ -60,7 +60,6 @@ Class ini_file
                 objRegex.Pattern = "^(?!=)\[.*\]"
 
                 If objRegex.Test(FileAsString) Then
-                    Debug.WriteLine FileAsString
                     
                     If objSectionDictionary.Exists(replace(replace(FileAsString,"[",""),"]","")) = 0 then
                         objSectionDictionary.Add replace(replace(FileAsString,"[",""),"]",""),CreateObject("scripting.dictionary")
