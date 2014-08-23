@@ -1,3 +1,6 @@
+
+On Error resume Next
+
 Const ForReading = 1
 Const ForWriting = 2
 Const ForAppending = 8
@@ -6,28 +9,36 @@ Const TristateTrue = 1
 Const TristateFalse = 0
 
 Class ini_file
-    Dim objSettingsDictionary
+    Dim objSectionDictionary 
     Dim objFileSystemObject
     Dim objRegex
 
         Private Sub Class_Initialize() 
-            Set objSettingsDictionary = CreateObject("scripting.dictionary")
+            Set objSectionDictionary  = CreateObject("scripting.dictionary")
             Set objFileSystemObject = CreateObject("Scripting.Filesystemobject")
             Set objRegex = New RegExp
             objRegex.Global = False
         End Sub
 
         Private Sub Class_Terminate() 
-            Set objSettingsDictionary = Nothing
+            Set objSectionDictionary  = Nothing
             Set objFileSystemObject = Nothing
             Set objRegex = Nothing
         End Sub
 
         Public Function GetSetting(strSection,strKey)
-            Set Section = objSettingsDictionary(strSection)
+            Set Section = objSectionDictionary (strSection)
             keysForSection = Section.keys
- 
-            GetSetting = Section.Item(strKey)
+ 			
+ 			If Err.Number <> 0 Then 
+ 				Err.Clear
+ 				GetSetting = ""
+ 			
+ 			Else
+ 				GetSetting = Section.Item(strKey)
+ 		    
+ 		    End If
+ 		    
         End Function
 
         Public Function OpenIniFile(strFilePath)
@@ -51,8 +62,8 @@ Class ini_file
                 If objRegex.Test(FileAsString) Then
                     Debug.WriteLine FileAsString
                     
-                    If objSettingsDictionary.Exists(replace(replace(FileAsString,"[",""),"]","")) = 0 then
-                        objSettingsDictionary.Add replace(replace(FileAsString,"[",""),"]",""),CreateObject("scripting.dictionary")
+                    If objSectionDictionary.Exists(replace(replace(FileAsString,"[",""),"]","")) = 0 then
+                        objSectionDictionary.Add replace(replace(FileAsString,"[",""),"]",""),CreateObject("scripting.dictionary")
                         CurrentSection = replace(replace(FileAsString,"[",""),"]","")
                         Debug.WriteLine FileAsString
                     End if
@@ -61,8 +72,8 @@ Class ini_file
                     Set colMatches = objRegex.execute(FileAsString)
                         
                     For Each match In colMatches
-                        If objSettingsDictionary.Exists(CurrentSection) Then
-                            Set settingsForSection = objSettingsDictionary.Item(CurrentSection)
+                        If objSectionDictionary.Exists(CurrentSection) Then
+                            Set settingsForSection = objSectionDictionary.Item(CurrentSection)
                             
                             If settingsForSection.Exists(Replace(match.value,"=","")) = 0 Then
                                 settingsForSection.Add Replace(match.value,"=",""),objRegex.replace(FileAsString,"")
