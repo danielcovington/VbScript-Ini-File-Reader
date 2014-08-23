@@ -82,6 +82,6 @@ Class ini_file
                 End If
             Loop
         End Function 
-
+On Error Goto 0
 End Class
 
