@@ -1,6 +1,3 @@
-
-On Error resume Next
-
 Const ForReading = 1
 Const ForWriting = 2
 Const ForAppending = 8
@@ -27,15 +24,22 @@ Class ini_file
         End Sub
 
         Public Function GetSetting(strSection,strKey)
-            Set Section = objSectionDictionary (strSection)
-            keysForSection = Section.keys
- 			
- 			If Err.Number <> 0 Then 
- 				Err.Clear
- 				GetSetting = ""
- 			
- 			Else
- 				GetSetting = Section.Item(strKey)
+        	If objSectionDictionary.exists(strSection) Then
+        	
+				Set Section = objSectionDictionary (strSection)
+					
+					If Section.exists (strKey) Then
+					
+ 						GetSetting = Section.Item(strKey)
+ 		    
+ 		    		Else 
+ 		    		
+ 		    			GetSetting = ""
+ 		    		
+ 		    		End If
+ 		    Else 
+ 		    
+ 		    	GetSetting = ""
  		    
  		    End If
  		    
@@ -64,7 +68,6 @@ Class ini_file
                     If objSectionDictionary.Exists(replace(replace(FileAsString,"[",""),"]","")) = 0 then
                         objSectionDictionary.Add replace(replace(FileAsString,"[",""),"]",""),CreateObject("scripting.dictionary")
                         CurrentSection = replace(replace(FileAsString,"[",""),"]","")
-                        Debug.WriteLine FileAsString
                     End if
                 Else
                     objRegex.Pattern = "^(?!;).*?="
@@ -82,6 +85,5 @@ Class ini_file
                 End If
             Loop
         End Function 
-On Error Goto 0
-End Class
 
+End Class
